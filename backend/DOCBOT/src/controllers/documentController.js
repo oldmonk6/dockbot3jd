@@ -1,33 +1,16 @@
 import { Document } from "../models/Document.js"; // Assuming you have a Document model
 import { extractTextFromDocument } from "../utils/extractTextFromDocument.js"; // Utility function to extract text from uploaded document
 import axios from "axios";
+import { createDeepInfra } from '@ai-sdk/deepinfra';
+import { generateText } from 'ai';
+
+
+const deepinfra = createDeepInfra({
+  apiKey: process.env.DEEPINFRA_API_KEY ?? '',
+});
 
 // Example AI function for calling Gemini API
-const callAIAnalysisService = async (text) => {
-  try {
-    console.log(process.env.GOOGLE_GENERATIVE_AI_API_KEY)
-    const response = await axios.post('https://generative-ai.googleapis.com/v1beta2/models/gemini-1.5-pro-latest:generateText', {
-      headers: {
-        'Authorization': `Bearer ${process.env.GOOGLE_GENERATIVE_AI_API_KEY}`, // Use the correct API key
-        'Content-Type': 'application/json',
-      },
-      data: {
-        prompt: `Analyze the following medical document and provide possible analysis such as severity, dosage instructions, and next steps: ${text}`,
-        max_tokens: 150,
-        temperature: 0.7,
-      }
-    });
 
-    // Assuming the response has the following structure
-    return {
-      severity: response.data.choices[0].text.includes("severity") ? "Moderate" : "Unknown",
-      dosage: response.data.choices[0].text.includes("dosage") ? "Take 2 tablets daily" : "Unknown",
-      nextSteps: response.data.choices[0].text.includes("next steps") ? "Follow up in 1 week" : "Unknown",
-    };
-  } catch (error) {
-    throw new Error('Failed to call Gemini AI analysis service');
-  }
-};
 
 export const uploadDocument = async (req, res) => {
   try {
@@ -49,15 +32,36 @@ export const uploadDocument = async (req, res) => {
     }
      console.log("hello")
     // Step 3: Call the Gemini AI analysis service with the extracted text
-    const analysisResults = await callAIAnalysisService(extractedText);
-    console.log("hello2");
-
+    const diagnosisResponse = await generateText({
+          model: deepinfra('meta-llama/Meta-Llama-3.1-70B-Instruct'),
+          prompt: `Analyze  and provide me with the severity to handle the disease from the given data in 50 words: ${extractedText}`,
+        });
+        console.log(diagnosisResponse);
+        const diagnosisPrediction = diagnosisResponse?.text || "No diagnosis prediction available.";
+        const dosageresponse = await generateText({
+          model: deepinfra('meta-llama/Meta-Llama-3.1-70B-Instruct'),
+          prompt: `Analyze  and provide me with the dosage to handle the disease from the given data in 50 words ${extractedText}`,
+        });
+        console.log(dosageresponse);
+        const dosageprediction = dosageresponse?.text || "No diagnosis prediction available.";
+        const nextstepresponse = await generateText({
+          model: deepinfra('meta-llama/Meta-Llama-3.1-70B-Instruct'),
+          prompt: `Analyze  and provide me with the next step to handle the disease from the given data 50 words: ${extractedText}`,
+        });
+        console.log(nextstepresponse);
+        const nextstepprediction = nextstepresponse?.text || "No diagnosis prediction available.";
     // Step 4: Store AI results in the document
+    const analysisResults={
+      severity:diagnosisPrediction,
+      dosage:dosageprediction,
+      nextSteps:nextstepprediction
+    }
+    console.log(analysisResults);
     document.analysis = analysisResults;
     await document.save();
 
     // Step 5: Respond with the document and analysis
-    res.status(201).json({ success: true, document });
+    res.status(201).json({ success: true, analysisResults });
   } catch (error) {
     console.error("Error in uploadDocument:", error);
     res.status(500).json({ success: false, message: error.message });
