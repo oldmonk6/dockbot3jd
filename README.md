@@ -46,3 +46,64 @@ DocBot tackles these challenges by providing timely and personalized medical ass
    - Nearby hospitals or specialists.
 
 ---
+3.Steps to bootstrap this project:
+   # DocBot Backend
+
+This repository contains the backend for the **DocBot** application, a powerful backend service built with Node.js and Express. The backend includes user authentication, file handling, PDF parsing, and integration with AI and database services.
+  
+  ## Table of Contents
+  
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+  - [Scripts](#scripts)
+  - [Features](#features)
+  - [Technologies](#technologies)
+  
+  ---
+  
+  ## Requirements
+  
+  Ensure you have the following installed before running the application:
+  
+  - **Node.js** (v16 or above recommended)
+  - **npm** (comes with Node.js)
+  - **MongoDB** (local or hosted instance)
+  
+  ---
+  
+  ## Setup
+  
+### 1.Clone the repository:
+     ```bash
+     git clone <repository-url>
+     cd docbot-backend
+
+    
+### 4.Install dependencies:
+     npm install
+
+### 5.The dependencies used in this project are:
+    @ai-sdk/deepinfra: AI SDK for Deepinfra services.
+    @google/generative-ai: Integration for Google Generative AI.
+    ai: General AI utilities.
+    axios: Promise-based HTTP client for API requests.
+    bcrypt: Password hashing for secure user authentication.
+    cookie-parser: Parse cookies in incoming requests.
+    cors: Enable cross-origin resource sharing.
+    dotenv: Load environment variables from .env files.
+    express: Web framework for Node.js.
+    jsonwebtoken: Token generation and validation.
+    mongoose: MongoDB object modeling.
+    multer: File upload middleware.
+    pdf-parse: PDF file parsing.
+    zod: Schema-based validation.
+    
+### 6.Dev Dependencies:
+    nodemon: Monitors files and restarts the server on changes.
+    Install dependencies:
+
+
+### 7.Run the development server with the following command:
+    npm run dev
+
+    
