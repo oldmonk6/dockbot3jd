@@ -28,6 +28,7 @@ export function Chatbot() {
 
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center bg-gray-900">
+        <div className="text-gray-100 text-lg">NOTE : This prescription aids your health, but consult your healthcare provider to confirm its suitability..</div>
       <div className="w-full max-w-2xl bg-gray-800 text-white p-8 rounded-lg shadow-lg">
         <div className="flex justify-center mb-4">
           <h1 className="text-3xl font-bold">How can I help you?</h1>

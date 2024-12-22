@@ -46,6 +46,7 @@ export function Upload() {
 
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-r from-gray-500 to-gray-700">
+      <div className="text-gray-100 text-lg">NOTE : This analysis helps understand your health. Consult your healthcare provider to interpret and act accordingly.</div>
       <div className="w-full max-w-2xl bg-gray-800 text-white p-8 rounded-lg shadow-lg">
         <div className="flex justify-center mb-4">
           <h1 className="text-3xl font-bold text-white">Upload Document</h1>
